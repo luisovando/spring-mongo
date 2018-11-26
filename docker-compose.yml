@@ -1,0 +1,23 @@
+version: '3.1'
+
+services:
+  app:
+    build: .
+    image: luisovando/spring-mongo:0.0.1-SNAPSHOT
+    restart: always
+    container_name: spring-mongo
+    ports:
+      - 8081:8080
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    container_name: spring-mongo-db
+    volumes:
+      - $HOME/data/db:/data/db
+      - $HOME/data/mongo-data:/data/db
+      - $HOME/data/mongo-backup:/data/bkp

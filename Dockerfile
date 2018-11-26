@@ -1,6 +1,9 @@
 # Start with a base image containing Java runtime
 FROM openjdk:8-jdk-alpine
 
+# Required for starting application up.
+RUN apk update && apk add bash
+
 # Add Maintainer Info
 LABEL maintainer="isc.luisovando@gmail.com"
 
