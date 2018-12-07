@@ -2,8 +2,8 @@ package com.luisovando.app.controllers;
 
 import java.util.List;
 import javax.validation.Valid;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,29 +24,34 @@ public class PetController {
 
   @GetMapping(value = "")
   public List<Pet> index() {
-    return this.repository.findAll();
+    return (List<Pet>) this.repository.findAll();
   }
 
   @GetMapping(value = "/{id}")
-  public Pet show(@PathVariable("id") ObjectId petId) {
-    return this.repository.findBy_id(petId);
+  public Pet show(@PathVariable("id") String petId) {
+    return this.repository.findById(petId).orElse(null);
   }
 
   @PostMapping(value = "")
   public Pet store(@Valid @RequestBody Pet pet) {
-    pet.set_id(ObjectId.get());
     this.repository.save(pet);
     return pet;
   }
 
   @PutMapping(value = "/{id}")
-  public void update(@PathVariable("id") ObjectId petId, @Valid @RequestBody Pet pet) {
-    pet.set_id(petId);
+  public void update(@PathVariable("id") String petId, @Valid @RequestBody Pet pet) {
+    pet.setId(petId);
     this.repository.save(pet);
   }
 
   @DeleteMapping(value = "/{id}")
-  public void delete(@PathVariable("id") ObjectId petId) {
-    this.repository.delete(this.repository.findBy_id(petId));
+  public void delete(@PathVariable("id") String petId) throws Exception {
+	Pet pet = this.repository.findById(petId).orElse(null);
+	
+	if (StringUtils.isEmpty(pet)) {
+		throw new Exception("Not found pet");
+	}
+	
+	this.repository.delete(pet);
   }
 }

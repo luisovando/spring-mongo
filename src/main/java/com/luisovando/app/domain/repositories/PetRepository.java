@@ -1,10 +1,9 @@
 package com.luisovando.app.domain.repositories;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.MongoRepository;
-
+import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
+import org.springframework.data.repository.CrudRepository;
 import com.luisovando.app.domain.models.Pet;
 
-public interface PetRepository extends MongoRepository<Pet, String> {
-	Pet findBy_id(ObjectId _id);
+@EnableScan
+public interface PetRepository extends CrudRepository<Pet, String> {
 }
